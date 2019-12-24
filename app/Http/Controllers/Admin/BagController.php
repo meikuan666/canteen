@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Bag;
+
 class BagController extends Controller
 {
     /**
@@ -15,69 +16,59 @@ class BagController extends Controller
     public function index()
     {
 
-        return  response()->json(['success' => true,'message' => '查询成功','bags' => Bag::all()]);
+        return response()->json(['success' => true, 'message' => '查询成功', 'bags' => Bag::all()]);
     }
-
 
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        Bag::create($request->all());
-        return  response()->json(['success' => true,'message' => '新增成功']);
+        $bag = Bag::create($request->all());
+        return response()->json(['success' => true, 'message' => '新增成功','bag' => $bag]);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
-        $bags = Bag::where('id', $id)->get();
-        return  response()->json(['success' => true,'message' => '新增成功'],compact('bags'));
+        $bag = Bag::find($id);
+        return response()->json(['success' => true, 'message' => '查询成功', 'bag' => $bag]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
 
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
-        $bags = Bag::find($id);
-        $bags->update([
-            'name' => $request->name,
-            'image' => $request->image,
-            'price' => $request->price,
-        ]);
-        return  response()->json(['success' => true,'message' => '修改成功']);
+        $bag = Bag::where('id',$id)->update($request->only('name','image','price'));
+
+        return response()->json(['success' => true, 'message' => '修改成功','bag' => $bag]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
-        return  response()->json(['success' => true,'message' => '删除成功','bags' => Bag::destroy($id)]);
+        Bag::destroy($id);
+        return response()->json(['success' => true, 'message' => '删除成功']);
     }
 }
